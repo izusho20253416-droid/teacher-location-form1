@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>先生居場所一覧</title>
+</head>
+<body>
+  <h1>先生居場所一覧</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>先生名</th>
+        <th>部屋名</th>
+        <th>コメント</th>
+        <th>更新日時</th>
+      </tr>
+    </thead>
+    <tbody id="data-body"></tbody>
+  </table>
+
+  <script>
+    const DATA_URL = 'https://script.google.com/macros/s/AKfycbxB7CObn74fCzQFSc58A5GyRvBSRvdBvzBE-uMM0hN1vdgwSVqZnV1fO4rGGH68MjaK/exec'; // JSONを返すURL
+
+    async function loadData() {
+      const res = await fetch(DATA_URL);
+      const data = await res.json();
+      const tbody = document.getElementById('data-body');
+      tbody.innerHTML = '';
+
+      data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row.teacher}</td>
+          <td>${row.room}</td>
+          <td>${row.comment}</td>
+          <td>${new Date(row.updated).toLocaleString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    loadData();
+    // 10秒ごとに自動更新
+    setInterval(loadData, 10000);
+  </script>
+</body>
+</html>
